@@ -71,7 +71,7 @@ class AccountBankStatementLine(models.Model):
                     rf"""
                     {unaccent("%s")} ~* ('^' || (
                         SELECT STRING_AGG(CONCAT('(?=.*\m', chunk[1], '\M)'), '')
-                        FROM regexp_matches({unaccent('partner.name')}, '\w{{3,}}', 'g')
+                        FROM regexp_matches({unaccent("partner.name")}, '\w{{3,}}', 'g')
                         AS chunk
                     ))
                     """,
@@ -105,8 +105,8 @@ class AccountBankStatementLine(models.Model):
                 query_parts,
                 self.company_id.id,
             )
-            self._cr.execute(final_query)
-            row = self._cr.fetchone()
+            self.env.cr.execute(final_query)
+            row = self.env.cr.fetchone()
             if row:
                 return self.env["res.partner"].browse(row[0])
 

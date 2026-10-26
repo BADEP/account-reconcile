@@ -512,7 +512,7 @@ class AccountReconcileModel(models.Model):
 
         if sub_queries:
             order_by = get_order_by_clause(alias="sub")
-            self._cr.execute(
+            self.env.cr.execute(
                 aml_cte
                 + """
                     SELECT
@@ -530,7 +530,7 @@ class AccountReconcileModel(models.Model):
                 """,
                 all_params + [tuple(numerical_tokens + exact_tokens)],
             )
-            candidate_ids = [r[0] for r in self._cr.fetchall()]
+            candidate_ids = [r[0] for r in self.env.cr.fetchall()]
             if candidate_ids and (
                 not self.unique_matching
                 or (self.unique_matching and len(candidate_ids) == 1)
@@ -561,7 +561,7 @@ class AccountReconcileModel(models.Model):
                 aml_amount_field = "amount_residual_currency"
 
             order_by = get_order_by_clause(alias="account_move_line")
-            self._cr.execute(
+            self.env.cr.execute(
                 f"""
                     SELECT account_move_line.id
                     FROM {from_clause}
@@ -580,7 +580,7 @@ class AccountReconcileModel(models.Model):
                 ],
             )
             amls = self.env["account.move.line"].browse(
-                [row[0] for row in self._cr.fetchall()]
+                [row[0] for row in self.env.cr.fetchall()]
             )
         else:
             amls = self.env["account.move.line"].search(

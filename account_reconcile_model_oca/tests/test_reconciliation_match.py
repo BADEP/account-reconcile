@@ -257,8 +257,10 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         invoice.action_post()
         lines = invoice.line_ids
         return lines.filtered(
-            lambda line: line.account_id.account_type
-            in ("asset_receivable", "liability_payable")
+            lambda line: (
+                line.account_id.account_type
+                in ("asset_receivable", "liability_payable")
+            )
         )
 
     @classmethod
@@ -1343,8 +1345,10 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             payment.action_post()
 
             return payment.move_id.line_ids.filtered(
-                lambda x: x.account_id.account_type
-                not in {"asset_receivable", "liability_payable"}
+                lambda x: (
+                    x.account_id.account_type
+                    not in {"asset_receivable", "liability_payable"}
+                )
             )
 
         payment_partner = self.env["res.partner"].create(
@@ -1513,18 +1517,20 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
                 {"amls": term_line, "model": rule},
             )
 
-        with self.subTest(
-            rule_field="match_text_location_label", st_line_field="payment_ref"
+        with (
+            self.subTest(
+                rule_field="match_text_location_label", st_line_field="payment_ref"
+            ),
+            rollback(),
         ):
-            with rollback():
-                term_line.name = ""
-                st_line.payment_ref = "/?"
+            term_line.name = ""
+            st_line.payment_ref = "/?"
 
-                # No exact matching when the term line name is an empty string
-                self.assertDictEqual(
-                    rule._apply_rules(st_line, None),
-                    {},
-                )
+            # No exact matching when the term line name is an empty string
+            self.assertDictEqual(
+                rule._apply_rules(st_line, None),
+                {},
+            )
 
         for rule_field, st_line_field in (
             ("match_text_location_label", "payment_ref"),
