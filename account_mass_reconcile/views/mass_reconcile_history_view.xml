@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <odoo>
     <record id="view_mass_reconcile_history_search" model="ir.ui.view">
         <field name="name">mass.reconcile.history.search</field>
@@ -21,7 +21,7 @@
                 <field name="mass_reconcile_id" />
                 <field name="date" />
                 <newline />
-                <group expand="0" string="Group By...">
+                <group>
                     <filter
                         name="Reconciliation Profile"
                         icon="terp-stock_effects-object-colorize"

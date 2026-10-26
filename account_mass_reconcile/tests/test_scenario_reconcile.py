@@ -564,8 +564,9 @@ class TestScenarioReconcile(AccountTestInvoicingCommon):
         )
         writeoff_receivable_line = (
             invoice_receivable_line.full_reconcile_id.reconciled_line_ids.filtered(
-                lambda li: li.journal_id.id
-                == self.company_data["default_journal_misc"].id
+                lambda li: (
+                    li.journal_id.id == self.company_data["default_journal_misc"].id
+                )
             )
         )
         self.assertEqual(
